@@ -1,9 +1,6 @@
 package olya.app.remindme.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.List;
 import lombok.Data;
 
@@ -12,8 +9,11 @@ import lombok.Data;
 @Table(name = "subjects")
 public class Subject {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    private Long userId;
+    private boolean active;
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
