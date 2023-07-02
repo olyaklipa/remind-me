@@ -1,12 +1,6 @@
 package olya.app.remindme.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.Data;
 
@@ -22,5 +16,13 @@ public class ActionEvent {
     private Action action;
     private LocalDate date;
     private String note;
-    private boolean isDone; //only if requiresConfirmation is true
+    @Enumerated(value = EnumType.STRING)
+    private Status status; //only if requiresConfirmation is true
+
+
+    public enum Status {
+        DONE,
+        NOT_DONE,
+        NA
+    }
 }
