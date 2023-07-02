@@ -1,6 +1,8 @@
 package olya.app.remindme.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,5 +29,14 @@ public class Action {
     private boolean isRecurring;
     private int noticePeriodAdvance; //in days
     private int noticePeriodShort; //in days
+    @Enumerated(value = EnumType.STRING)
+    private NotificationMethod notificationMethod;
     private boolean requiresConfirmation;
+
+
+    public enum NotificationMethod {
+        EMAIL,
+        TELEGRAM,
+        EMAIL_AND_TELEGRAM
+    }
 }
