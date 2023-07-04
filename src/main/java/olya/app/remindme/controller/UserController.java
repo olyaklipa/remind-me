@@ -1,5 +1,6 @@
 package olya.app.remindme.controller;
 
+import jakarta.validation.Valid;
 import olya.app.remindme.dto.request.UserRequestDto;
 import olya.app.remindme.dto.response.UserResponseDto;
 import olya.app.remindme.model.User;
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserResponseDto register(@RequestBody UserRequestDto userRequestDto) {
+    public UserResponseDto register(@Valid @RequestBody UserRequestDto userRequestDto) {
         User user = userService.add(userRequestDto);
         return userMapper.mapToDto(user);
     }

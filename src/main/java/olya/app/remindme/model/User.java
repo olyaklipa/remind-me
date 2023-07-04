@@ -1,13 +1,6 @@
 package olya.app.remindme.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.util.Set;
 import lombok.Data;
 
@@ -21,6 +14,7 @@ public class User {
     private boolean active;
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String email;
     private String phoneNumber;
     private String password;
