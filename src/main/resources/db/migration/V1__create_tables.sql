@@ -8,7 +8,7 @@ CREATE TABLE `users`
     `active`       bit             NOT NULL DEFAULT 1,
     `first_name`   varchar(255)    NOT NULL,
     `last_name`    varchar(255)    NOT NULL,
-    `email`        varchar(255)    NOT NULL,
+    `email`        varchar(255)    NOT NULL UNIQUE,
     `phone_number` varchar(25)     NOT NULL,
     `password`     varchar(255)    NOT NULL,
     PRIMARY KEY (`id`)
@@ -71,6 +71,7 @@ CREATE TABLE `actions`
     `is_recurring`          bit             NOT NULL DEFAULT 0,
     `notice_period_advance` int UNSIGNED,
     `notice_period_short`   int UNSIGNED    NOT NULL,
+    `notification_method`   varchar(25)     NOT NULL,
     `requires_confirmation` bit             NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     CONSTRAINT `FK_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
@@ -88,7 +89,7 @@ CREATE TABLE `events`
     `action_id` bigint UNSIGNED NOT NULL,
     `date`      date            NOT NULL,
     `note`      varchar(255),
-    `is_done`   bit,
+    `status`    varchar(25)     NOT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `FK_action_id` FOREIGN KEY (`action_id`) REFERENCES `actions` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
