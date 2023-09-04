@@ -1,6 +1,7 @@
 package olya.app.remindme.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import olya.app.remindme.dto.request.UserRequestDto;
 import olya.app.remindme.dto.response.UserResponseDto;
 import olya.app.remindme.model.User;
@@ -16,19 +17,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
-    private UserService userService;
-    private UserMapper userMapper;
-
-    public UserController(UserService userService, UserMapper userMapper) {
-        this.userService = userService;
-        this.userMapper = userMapper;
-    }
+    private final UserService userService;
+    private final UserMapper userMapper;
 
     @PostMapping("/register")
     public UserResponseDto register(@Valid @RequestBody UserRequestDto userRequestDto) {
-        User user = userService.add(userRequestDto);
+        User user = userService.create(userRequestDto);
         return userMapper.mapToDto(user);
     }
 
