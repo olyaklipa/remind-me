@@ -2,6 +2,7 @@ package olya.app.remindme.service.impl;
 
 import java.util.List;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import olya.app.remindme.dto.request.UserRequestDto;
 import olya.app.remindme.exception.UserNotFoundException;
 import olya.app.remindme.model.Role;
@@ -15,16 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-
-    public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public User create(UserRequestDto userRequestDto) {

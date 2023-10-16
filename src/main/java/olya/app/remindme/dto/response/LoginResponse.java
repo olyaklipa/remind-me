@@ -1,4 +1,4 @@
-package olya.app.remindme.model;
+package olya.app.remindme.dto.response;
 
 import lombok.Data;
 

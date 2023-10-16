@@ -93,3 +93,18 @@ CREATE TABLE `events`
     PRIMARY KEY (`id`),
     CONSTRAINT `FK_action_id` FOREIGN KEY (`action_id`) REFERENCES `actions` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
+
+-- ----------------------------
+-- Table structure for tokens
+-- ----------------------------
+DROP TABLE IF EXISTS `tokens`;
+CREATE TABLE `tokens`
+(
+    `id`             bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `token`          varchar(255),
+    `revoked`        bit             NOT NULL,
+    `valid_until`    timestamp       NOT NULL,
+    `user_id`        bigint UNSIGNED NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+);
