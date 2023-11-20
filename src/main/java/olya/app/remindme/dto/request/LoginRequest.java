@@ -1,4 +1,4 @@
-package olya.app.remindme.model;
+package olya.app.remindme.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

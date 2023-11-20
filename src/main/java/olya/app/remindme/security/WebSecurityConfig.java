@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -20,6 +21,7 @@ public class WebSecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final CustomLogoutHandler customLogoutHandler;
 
     @Bean
     public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception {
@@ -34,11 +36,16 @@ public class WebSecurityConfig {
                 .securityMatcher("/**") //this makes your configuration works on whole application
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/test").permitAll()
-                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/users/register").permitAll()
                         .requestMatchers("/admin").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 );
+//                .logout(logout -> logout
+//                        .logoutUrl("/api/auth/logout")
+//                        .addLogoutHandler(customLogoutHandler)
+//                        .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext()))
+//                );
         return http.build();
     }
 

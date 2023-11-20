@@ -1,17 +1,15 @@
 package olya.app.remindme.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import olya.app.remindme.model.Role;
 import olya.app.remindme.repository.RoleRepository;
 import olya.app.remindme.service.RoleService;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
-
-    public RoleServiceImpl(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
 
     @Override
     public Role add(Role role) {
