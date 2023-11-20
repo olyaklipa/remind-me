@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "events")
-public class ActionEvent {
+public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,14 +15,13 @@ public class ActionEvent {
     @JoinColumn(name = "action_id")
     private Action action;
     private LocalDate date;
-    private String note;
     @Enumerated(value = EnumType.STRING)
-    private Status status; //only if requiresConfirmation is true
+    private Status status;
 
 
     public enum Status {
         DONE,
-        NOT_DONE,
+        SKIPPED,
         NA
     }
 }

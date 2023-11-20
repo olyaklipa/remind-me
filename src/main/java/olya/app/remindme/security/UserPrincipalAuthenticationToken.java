@@ -1,11 +1,12 @@
 package olya.app.remindme.security;
 
+import olya.app.remindme.model.User;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class UserPrincipalAuthenticationToken extends AbstractAuthenticationToken {
-    private final UserPrincipal principal;
+    private final User principal;
 
-    public UserPrincipalAuthenticationToken(UserPrincipal principal) {
+    public UserPrincipalAuthenticationToken(User principal) {
         super(principal.getAuthorities());
         this.principal = principal;
         setAuthenticated(true);
@@ -17,7 +18,7 @@ public class UserPrincipalAuthenticationToken extends AbstractAuthenticationToke
     }
 
     @Override
-    public UserPrincipal getPrincipal() {
+    public User getPrincipal() {
         return principal;
     }
 }

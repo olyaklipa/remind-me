@@ -12,6 +12,12 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
+    @Query("SELECT u FROM User u WHERE u.email = :email AND u.active = true")
+    Optional<User> findActiveUserByEmail(String email);
+
+    @Query("SELECT u FROM User u WHERE u.id = :id AND u.active = true")
+    Optional<User> findActiveUserById(Long id);
+
     @Query("SELECT u.roles FROM User u WHERE u.id = :userId")
     Set<Role> findRolesById(Long userId);
 }
