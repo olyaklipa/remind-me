@@ -16,7 +16,6 @@ public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private boolean active;
     private String name;
     @ManyToOne
     @JoinColumn(name = "user_id")
