@@ -1,5 +1,6 @@
 package olya.app.remindme.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,7 @@ public class User {
     private String lastName;
     private String email;
     private String phoneNumber;
+    @JsonIgnore
     private String password;
     @ManyToMany
     @JoinTable(name = "users_roles",
