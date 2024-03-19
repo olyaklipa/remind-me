@@ -1,6 +1,9 @@
 package olya.app.remindme.service.impl;
 
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import olya.app.remindme.exception.EntityNotFoundException;
 import olya.app.remindme.model.Role;
 import olya.app.remindme.repository.RoleRepository;
 import olya.app.remindme.service.RoleService;
@@ -12,7 +15,9 @@ public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     @Override
-    public Role add(Role role) {
+    public Role add(Role.RoleName roleName) {
+        Role role = new Role();
+        role.setRoleName(roleName);
         return roleRepository.save(role);
     }
 
@@ -20,6 +25,11 @@ public class RoleServiceImpl implements RoleService {
     public Role getByName(String name) {
         Role.RoleName roleName = Role.RoleName.valueOf(name);
         return roleRepository.findByRoleName(roleName)
-                .orElseThrow(() -> new RuntimeException("Role " + name + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Role " + name + " not found"));
+    }
+
+    @Override
+    public List<Role> getAll() {
+        return roleRepository.findAll();
     }
 }

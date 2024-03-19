@@ -1,9 +1,8 @@
 package olya.app.remindme.controller;
 
-import olya.app.remindme.security.UserPrincipal;
+import olya.app.remindme.model.User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,14 +14,14 @@ public class TestController {
     }
 
     @GetMapping("/secured")
-    public String secured(@AuthenticationPrincipal UserPrincipal principal) {
-        return "If you see this, then you are logged in as user " + principal.getEmail()
-                + " User Id: " + principal.getUserId() + " authorities: " + principal.getAuthorities();
+    public String secured(@AuthenticationPrincipal User user) {
+        return "If you see this, then you are logged in as user " + user.getEmail()
+                + " User Id: " + user.getId() + " authorities: " + user.getAuthorities();
     }
 
     @GetMapping("/admin")
-    public String admin(@AuthenticationPrincipal UserPrincipal principal) {
-        return "If you see this, then you are ADMIN with Email: " + principal.getEmail()
-                + " User Id: " + principal.getUserId() + " authorities: " + principal.getAuthorities();
+    public String admin(@AuthenticationPrincipal User user) {
+        return "If you see this, then you are ADMIN with Email: " + user.getEmail()
+                + " User Id: " + user.getId() + " authorities: " + user.getAuthorities();
     }
 }

@@ -5,8 +5,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import olya.app.remindme.dto.response.LoginResponse;
+import olya.app.remindme.model.User;
 import olya.app.remindme.security.JwtIssuer;
-import olya.app.remindme.security.UserPrincipal;
 import olya.app.remindme.service.AuthService;
 import olya.app.remindme.service.TokenService;
 import olya.app.remindme.service.UserService;
@@ -29,19 +29,15 @@ public class AuthServiceImpl implements AuthService {
                 new UsernamePasswordAuthenticationToken(email, password)
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
         Instant expiresAt = Instant.now().plus(Duration.of(1, ChronoUnit.DAYS));
-//        List<String> roles = principal.getAuthorities()
-//                .stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .toList();
-        String token = jwtIssuer.issue(principal.getUserId(), expiresAt, principal.getEmail());
-        tokenService.createTokenEntity(token, expiresAt, principal.getEmail());
+        String token = jwtIssuer.issue(user.getId(), expiresAt, user.getEmail());
+        tokenService.createTokenEntity(token, expiresAt, user.getEmail());
         return new LoginResponse(token);
     }
 
     public void logout(String email) {
-        tokenService.revokeUserTokens(userService.getByEmail(email));
+        tokenService.revokeUserTokens(userService.getActiveUserByEmail(email));
         SecurityContextHolder.clearContext();
     }
 }
