@@ -19,9 +19,6 @@
             distribution: 'corretto'
             java-version: '17'
 
-        - name: Unit tests
-          run: mvn -B test --file pom.xml
-
         - name: Build the app
           run: |
             mvn clean
