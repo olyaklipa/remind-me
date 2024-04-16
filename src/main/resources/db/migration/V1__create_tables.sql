@@ -5,13 +5,14 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users`
 (
     `id`           bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-    `active`       bit             NOT NULL DEFAULT 1,
+    `active`       bit DEFAULT 1,
     `first_name`   varchar(255)    NOT NULL,
     `last_name`    varchar(255)    NOT NULL,
-    `email`        varchar(255)    NOT NULL UNIQUE,
+    `email`        varchar(255)    NOT NULL,
     `phone_number` varchar(25)     NOT NULL,
     `password`     varchar(255)    NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `user-unique-key` (`email`, `active`)
 );
 
 
@@ -48,7 +49,6 @@ DROP TABLE IF EXISTS `subjects`;
 CREATE TABLE `subjects`
 (
     `id`      bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-    `active`  bit             NOT NULL DEFAULT 1,
     `name`    varchar(255)    NOT NULL,
     `user_id` bigint UNSIGNED NOT NULL,
     PRIMARY KEY (`id`),
@@ -62,19 +62,19 @@ CREATE TABLE `subjects`
 DROP TABLE IF EXISTS `actions`;
 CREATE TABLE `actions`
 (
-    `id`                    bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-    `active`                bit             NOT NULL DEFAULT 1,
-    `subject_id`            bigint UNSIGNED NOT NULL,
-    `title`                 varchar(255)    NOT NULL,
-    `start_date`            date            NOT NULL,
-    `frequency`             bigint UNSIGNED NOT NULL,
-    `is_recurring`          bit             NOT NULL DEFAULT 0,
-    `notice_period_advance` int UNSIGNED,
-    `notice_period_short`   int UNSIGNED    NOT NULL,
-    `notification_method`   varchar(25)     NOT NULL,
-    `requires_confirmation` bit             NOT NULL DEFAULT 0,
+    `id`                                          bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `subject_id`                                  bigint UNSIGNED NOT NULL,
+    `title`                                       varchar(255)    NOT NULL,
+    `active`                                      bit                      DEFAULT 1,
+    `start_date`                                  date            NOT NULL,
+    `repeat_every_num_of_days`                    int UNSIGNED    NOT NULL,
+    `num_of_repeats`                              int UNSIGNED,
+    `num_of_days_before_event_for_advance_notice` int UNSIGNED,
+    `num_of_days_before_event_for_short_notice`   int UNSIGNED,
+    `notification_method`                         varchar(25)     NOT NULL,
+    `requires_confirmation`                       bit             NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
-    CONSTRAINT `FK_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+    CONSTRAINT `FK_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 
@@ -88,10 +88,9 @@ CREATE TABLE `events`
     `id`        bigint UNSIGNED NOT NULL AUTO_INCREMENT,
     `action_id` bigint UNSIGNED NOT NULL,
     `date`      date            NOT NULL,
-    `note`      varchar(255),
     `status`    varchar(25)     NOT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `FK_action_id` FOREIGN KEY (`action_id`) REFERENCES `actions` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+    CONSTRAINT `FK_action_id` FOREIGN KEY (`action_id`) REFERENCES `actions` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 -- ----------------------------
@@ -100,11 +99,11 @@ CREATE TABLE `events`
 DROP TABLE IF EXISTS `tokens`;
 CREATE TABLE `tokens`
 (
-    `id`             bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-    `token`          varchar(255),
-    `revoked`        bit             NOT NULL,
-    `valid_until`    timestamp       NOT NULL,
-    `user_id`        bigint UNSIGNED NOT NULL,
+    `id`          bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `token`       varchar(255),
+    `revoked`     bit             NOT NULL,
+    `valid_until` timestamp       NOT NULL,
+    `user_id`     bigint UNSIGNED NOT NULL,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 );

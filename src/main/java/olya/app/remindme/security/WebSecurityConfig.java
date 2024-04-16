@@ -9,10 +9,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
@@ -21,31 +21,34 @@ public class WebSecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
-    private final CustomLogoutHandler customLogoutHandler;
+    private final PublicEndpointsConfig publicEndpointsConfig;
+
 
     @Bean
     public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception {
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         http
-                .cors(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(sessionManagementConfigurer
-                -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(AbstractHttpConfigurer::disable)
-                .securityMatcher("/**") //this makes your configuration works on whole application
-                .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/test").permitAll()
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/users/register").permitAll()
-                        .requestMatchers("/admin").hasAuthority("ADMIN")
-                        .anyRequest().authenticated()
-                );
-//                .logout(logout -> logout
-//                        .logoutUrl("/api/auth/logout")
-//                        .addLogoutHandler(customLogoutHandler)
-//                        .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext()))
-//                );
+            .cors(AbstractHttpConfigurer::disable)
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(sessionManagementConfigurer
+            -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .formLogin(AbstractHttpConfigurer::disable)
+            .securityMatcher("/**") //this makes your configuration works on whole application
+            .authorizeHttpRequests(registry -> registry
+                    .requestMatchers(publicEndpointsConfig.getPublicEndpoints().toArray(new String[0])).permitAll()
+                    .requestMatchers(
+                            "/users/my-user").hasAnyAuthority("ADMIN", "USER")
+                    .requestMatchers(
+                            "/users/by-email",
+                            "/users/{id}",
+                            "/users",
+                            "/users/{id}/roles",
+                            "/users/{id}/tokens",
+                            "/roles",
+                            "/admin").hasAuthority("ADMIN")
+                    .anyRequest().authenticated()
+            );
         return http.build();
     }
 
