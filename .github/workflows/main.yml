@@ -29,6 +29,9 @@
           run: |
             sudo /etc/init.d/mysql start
             mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
+        
+        - name: Unit Tests
+          run: mvn -B test --file pom.xml
 
         - name: Build the app
           run: |
