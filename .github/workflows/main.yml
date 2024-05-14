@@ -11,9 +11,9 @@
       runs-on: ubuntu-latest
 
       env:
-        DB_DATABASE: test_db
+        DB_DATABASE: remindme
         DB_USER: root
-        DB_PASSWORD: root
+        DB_PASSWORD: Lunchik_22
         
       steps:
         - name: Checkout code
