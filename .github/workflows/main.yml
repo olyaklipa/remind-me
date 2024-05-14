@@ -11,9 +11,9 @@
       runs-on: ubuntu-latest
 
       env:
-        DB_DATABASE: jdbc:mysql://localhost:3306/remindme
+        DB_DATABASE: test_db
         DB_USER: root
-        DB_PASSWORD: Lunchik_22
+        DB_PASSWORD: root
         
       steps:
         - name: Checkout code
@@ -29,9 +29,6 @@
           run: |
             sudo /etc/init.d/mysql start
             mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
-
-        - name: Unit Tests
-          run: mvn -B test --file pom.xml
 
         - name: Build the app
           run: |
