@@ -1,0 +1,38 @@
+services:
+  mysql:
+    container_name: my-mysql
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: my-user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: remindme
+    ports:
+      - "3307:3306"
+    volumes:
+      - my_volume:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u root -ppassword" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+
+  remindme-app:
+    container_name: my-remindme
+    image: olyaklipa/remind-me:latest
+    environment:
+      DB_HOST: my-mysql
+      DB_NAME: remindme
+      DB_USER: my-user
+      DB_PASSWORD: password
+      DB_PORT: 3306
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - mysql
+
+volumes:
+  my_volume:
