@@ -1,11 +1,13 @@
 package olya.app.remindme.service.impl;
 
 import jakarta.mail.internet.MimeMessage;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import olya.app.remindme.dto.EmailData;
+import olya.app.remindme.model.Action;
 import olya.app.remindme.service.EmailService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -22,6 +24,19 @@ public class EmailServiceImpl implements EmailService {
     private String from;
     @Value("${hostname}")
     private String hostName;
+
+    @Override
+    public EmailData generateEmailData(Action action, LocalDate scheduledDate, String template, String eventId) {
+        EmailData data = new EmailData();
+        data.setTo(action.getSubject().getUser().getEmail());
+        data.setUserFirstname(action.getSubject().getUser().getFirstName());
+        data.setActionTitle(action.getTitle());
+        data.setSubjectName(action.getSubject().getName());
+        data.setScheduledDate(scheduledDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        data.setTemplate(template);
+        data.setId(eventId);
+        return data;
+    }
 
     @Override
     @Async

@@ -26,4 +26,6 @@ public interface ActionRepository extends JpaRepository<Action, Long> {
 //    @Query("SELECT a FROM Action a WHERE a.subject.id = :subjectId AND a.title = :title")
     Optional<Action> findBySubjectIdAndTitle(Long subjectId, String title);
 
+    List<Action> findAllByActiveTrue();
+
 }

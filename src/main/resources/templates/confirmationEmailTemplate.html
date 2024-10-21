@@ -27,16 +27,16 @@
                         <td>
                             <div class="button-container" style="padding-left: 30px; padding-top: 20px; padding-bottom: 40px;">
                                 <a class="button-link button-link-done" style="font-size: 14px; color: #FFF; text-decoration: none; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px;  background-color: #468d09; border-color: #468d09; border-style: solid; border-width: 12px 24px; margin: 0 5px;"
-                                   th:href="@{'http://' + ${hostName} + '/events/' + ${eventId} + '/status'(status=DONE)}">
+                                   th:href="@{'http://' + ${hostName} + '/events/' + ${eventId} + '/update'(status='DONE', updateDate=false)}">
                                     DONE</a>
 
-                                <a class="button-link button-link-not-yet" style="font-size: 14px; color: #FFF; text-decoration: none; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; background-color: #f6c71c; border-color: #f6c71c; border-style: solid; border-width: 12px 24px; margin: 0 5px;"
-                                   th:href="@{'http://' + ${hostName} + '/events/' + ${eventId} + '/status'(status=NA)}">
-                                    NOT YET</a>
-
                                 <a class="button-link button-link-skip" style="font-size: 14px; color: #FFF; text-decoration: none; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; background-color: #f1556c; border-color: #f1556c; border-style: solid; border-width: 12px 24px; margin: 0 5px;"
-                                   th:href="@{'http://' + ${hostName} + '/events/' + ${eventId} + '/status'(status=SKIPPED)}">
+                                   th:href="@{'http://' + ${hostName} + '/events/' + ${eventId} + '/update'(status='SKIPPED', updateDate=false)}">
                                     SKIP</a>
+
+                                <a class="button-link button-link-not-yet" style="font-size: 14px; color: #FFF; text-decoration: none; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; background-color: #f6c71c; border-color: #f6c71c; border-style: solid; border-width: 12px 24px; margin: 0 5px;"
+                                   th:href="@{'http://' + ${hostName} + '/events/' + ${eventId} + '/update'(status='PENDING', updateDate=false)}">
+                                    NOT YET</a>
                             </div>
                         </td>
                     </tr>

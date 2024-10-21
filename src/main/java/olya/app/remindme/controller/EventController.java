@@ -1,6 +1,7 @@
 package olya.app.remindme.controller;
 
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,12 @@ public class EventController {
         List<Event> events = eventService.getAll(user.getId());
         return events.stream().map(eventMapper::mapToDto).collect(Collectors.toList());
     }
-    @GetMapping("/{id}/status")
+
+    @GetMapping("/{id}/update")
     EventResponseDto update (@PathVariable Long id,
-                             @RequestParam Event.Status status) {
-        Event event = eventService.updateStatus(id, status);
+                             @RequestParam Event.Status status,
+                             @RequestParam boolean updateDate) {
+        Event event = eventService.update(id, status, updateDate);
         return eventMapper.mapToDto(event);
     }
 }
