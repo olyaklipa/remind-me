@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import olya.app.remindme.dto.request.UserRequestDto;
 import olya.app.remindme.exception.CustomRequestException;
 import olya.app.remindme.exception.EntityNotFoundException;
+import olya.app.remindme.exception.ExistedEntityException;
 import olya.app.remindme.model.Role;
 import olya.app.remindme.model.User;
 import olya.app.remindme.repository.UserRepository;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User create(UserRequestDto userRequestDto) {
         validateRepeatPassword(userRequestDto.getPassword(), userRequestDto.getRepeatPassword());
-//        existedActiveUser(userRequestDto.getEmail());
+        existedActiveUser(userRequestDto.getEmail());
         User user = new User();
         user.setActive(true);
         user.setRoles(Set.of(roleService.getByName("USER")));
@@ -102,8 +103,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-//    private void existedActiveUser(String email) {
-//        userRepository.findByEmailAndActiveTrue(email)
-//                .ifPresent(user -> {throw new ExistedEntityException("The user with email " + email + " already exist");});
-//    }
+    private void existedActiveUser(String email) {
+        userRepository.findByEmailAndActiveTrue(email)
+                .ifPresent(user -> {throw new ExistedEntityException("The user with email " + email + " already exist");});
+    }
 }

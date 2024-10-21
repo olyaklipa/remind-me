@@ -1,5 +1,6 @@
 package olya.app.remindme.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import olya.app.remindme.dto.request.ActionRequestDto;
@@ -26,6 +27,7 @@ public class ActionServiceImpl implements ActionService {
     @Override
     @Transactional
     public Action create(Long userId, ActionRequestDto actionRequestDto) {
+        checkStartDateForCreate(actionRequestDto.getStartDate());
         validateActionRequestDto(actionRequestDto);
         Subject subject = subjectService.getById(userId, actionRequestDto.getSubjectId());
         if(existedActionTitleForSubject(actionRequestDto.getSubjectId(), actionRequestDto.getTitle())) {
@@ -35,6 +37,8 @@ public class ActionServiceImpl implements ActionService {
         Action action = new Action();
         action.setSubject(subject);
         action.setActive(true);
+        action.setLastExecutionDate(null);
+        action.setRepeatsCount(0);
         return actionRepository.save(actionMapper.mapToEntity(action, actionRequestDto));
     }
 
@@ -44,6 +48,7 @@ public class ActionServiceImpl implements ActionService {
         validateActionRequestDto(actionRequestDto);
         Subject subject = subjectService.getById(userId, actionRequestDto.getSubjectId());
         Action action = getById(userId, id);
+        checkStartDateForUpdate(action, actionRequestDto.getStartDate());
         if((action.getTitle().equals(actionRequestDto.getTitle())) ||
                 (!existedActionTitleForSubject(actionRequestDto.getSubjectId(), actionRequestDto.getTitle()))) {
             action.setSubject(subject);
@@ -52,6 +57,13 @@ public class ActionServiceImpl implements ActionService {
             throw new ExistedEntityException("The action with title" + actionRequestDto.getTitle() +
                     " already exists for the subject " + actionRequestDto.getSubjectId());
         }
+    }
+
+    @Override
+    @Transactional
+    public void updateLastExecutionDate(Action action, LocalDate date) {
+        action.setLastExecutionDate(date);
+        actionRepository.save(action);
     }
 
 //    @Override
@@ -107,8 +119,30 @@ public class ActionServiceImpl implements ActionService {
     }
 
     private void validateActionRequestDto (ActionRequestDto actionRequestDto) {
-        if (actionRequestDto.getNumOfDaysBeforeEventForAdvanceNotice() <= actionRequestDto.getNumOfDaysBeforeEventForShortNotice()) {
+        if (actionRequestDto.getNumOfDaysBeforeEventForAdvanceNotice() != null
+                && actionRequestDto.getNumOfDaysBeforeEventForShortNotice() != null
+                && actionRequestDto.getNumOfDaysBeforeEventForAdvanceNotice() <= actionRequestDto.getNumOfDaysBeforeEventForShortNotice()) {
             throw new CustomRequestException("The short notice should have smaller value than advanced one");
+        }
+        if (actionRequestDto.getNumOfDaysBeforeEventForAdvanceNotice() != null
+                && LocalDate.now().plusDays(actionRequestDto.getNumOfDaysBeforeEventForAdvanceNotice()).isAfter(actionRequestDto.getStartDate())) {
+            throw new CustomRequestException("The advance notice date has already passed for the startDate provided");
+        }
+        if (actionRequestDto.getNumOfDaysBeforeEventForShortNotice() != null
+                && LocalDate.now().plusDays(actionRequestDto.getNumOfDaysBeforeEventForShortNotice()).isAfter(actionRequestDto.getStartDate())) {
+            throw new CustomRequestException("The short notice date has already passed for the startDate provided");
+        }
+    }
+
+    private void checkStartDateForCreate (LocalDate startDate) {
+        if (startDate.isBefore(LocalDate.now())) {
+            throw new CustomRequestException("The startDate has already passed");
+        }
+    }
+
+    private void checkStartDateForUpdate (Action action, LocalDate newStartDate) {
+        if (newStartDate.isEqual(action.getStartDate()) && action.getLastExecutionDate() != null) {
+            throw new CustomRequestException("The action cannot be updated with a new startDate");
         }
     }
 }

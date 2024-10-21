@@ -22,6 +22,7 @@ public class Event {
     public enum Status {
         DONE,
         SKIPPED,
+        PENDING,
         NA
     }
 }

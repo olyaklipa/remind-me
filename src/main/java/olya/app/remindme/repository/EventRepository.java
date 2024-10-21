@@ -1,5 +1,6 @@
 package olya.app.remindme.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import olya.app.remindme.model.Action;
@@ -25,8 +26,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "WHERE s.user.id = :userId")
     List<Event> findEventsByUser(Long userId);
 
-//    @Query("SELECT e FROM Event e " +
-//            "JOIN e.action a " +
-//            "JOIN a.subject s " +
-//            "WHERE s.user.id = :userId")
+    List<Event> findByDateAndStatus(LocalDate date, Event.Status status);
+
+    @Query("SELECT e FROM Event e WHERE e.status = :status AND e.action.requiresConfirmation = true")
+    List<Event> findByStatusAndRequiresConfirmation(Event.Status status);
+
 }

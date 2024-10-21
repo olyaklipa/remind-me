@@ -43,11 +43,13 @@ public class Action {
     private Subject subject;
     private String title;
     private boolean active;
-    private LocalDate startDate;
+    private LocalDate startDate; //required
+    private LocalDate lastExecutionDate; //initially null, set automatically by ReminderJob
     private int repeatEveryNumOfDays; //required
     private Integer numOfRepeats;
-    private int numOfDaysBeforeEventForAdvanceNotice; //not required
-    private int numOfDaysBeforeEventForShortNotice; //not required
+    private int repeatsCount; // initially 0, set automatically by ReminderJob
+    private Integer numOfDaysBeforeEventForAdvanceNotice; //not required
+    private Integer numOfDaysBeforeEventForShortNotice; //not required
     @Enumerated(value = EnumType.STRING)
     private NotificationMethod notificationMethod;
     private boolean requiresConfirmation;

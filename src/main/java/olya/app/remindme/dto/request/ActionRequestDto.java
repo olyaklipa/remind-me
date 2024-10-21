@@ -19,8 +19,8 @@ public class ActionRequestDto {
     @NotNull(message = "Frequency is required")
     private int repeatEveryNumOfDays;
     private Integer numOfRepeats;
-    private int numOfDaysBeforeEventForAdvanceNotice;
-    private int numOfDaysBeforeEventForShortNotice;
+    private Integer numOfDaysBeforeEventForAdvanceNotice;
+    private Integer numOfDaysBeforeEventForShortNotice;
     @NotNull(message = "Notification method is required")
     private Action.NotificationMethod notificationMethod;
     private boolean requiresConfirmation;

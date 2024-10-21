@@ -1,9 +1,12 @@
 package olya.app.remindme.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import olya.app.remindme.exception.EntityNotFoundException;
+import olya.app.remindme.model.Action;
 import olya.app.remindme.model.Event;
+import olya.app.remindme.model.Subject;
 import olya.app.remindme.repository.EventRepository;
 import olya.app.remindme.service.ActionService;
 import olya.app.remindme.service.EventService;
@@ -25,10 +28,19 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public Event update(Event.Status status) {
-        //to use by cron job
-        return null;
+    public Event update(Long id, Event.Status status, boolean updateDate) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("The event with id " + id + " not found"));
+        event.setStatus(status);
+        if (updateDate) {
+            LocalDate today = LocalDate.now();
+            event.setDate(today);
+            Action action = event.getAction();
+            actionService.updateLastExecutionDate(action, today);
+        }
+        return eventRepository.save(event);
     }
+
 
     @Override
     @Transactional(readOnly = true)
