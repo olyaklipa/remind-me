@@ -12,6 +12,6 @@ public class PublicEndpointsConfig {
             "/users/registration",
             "/test",
             "/send-email",
-            "/events/{id}/status"
+            "/events/{id}/update"
     );
 }

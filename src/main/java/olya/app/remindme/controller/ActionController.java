@@ -1,6 +1,7 @@
 package olya.app.remindme.controller;
 
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -41,19 +42,20 @@ public class ActionController {
         return actionMapper.mapToDto(action);
     }
 
-//    @PutMapping("/suspend/{id}")
-//    ActionResponseDto suspend (@AuthenticationPrincipal User user,
-//                               @PathVariable Long id) {
-//        Action action = actionService.suspend(user.getId(), id);
-//        return actionMapper.mapToDto(action);
-//    }
-//
-//    @PutMapping("/reactivate/{id}")
-//    ActionResponseDto reactivate (@AuthenticationPrincipal User user,
-//                                  @PathVariable Long id) {
-//        Action action = actionService.reactivate(user.getId(), id);
-//        return actionMapper.mapToDto(action);
-//    }
+    @PutMapping("/{id}/suspend")
+    ActionResponseDto suspend (@AuthenticationPrincipal User user,
+                               @PathVariable Long id) {
+        Action action = actionService.suspend(user.getId(), id);
+        return actionMapper.mapToDto(action);
+    }
+
+    @PutMapping("/{id}/resume")
+    ActionResponseDto resume (@AuthenticationPrincipal User user,
+                              @PathVariable Long id,
+                              @RequestBody LocalDate newStartDate) {
+        Action action = actionService.resume(user.getId(), id, newStartDate);
+        return actionMapper.mapToDto(action);
+    }
 
     @DeleteMapping("/{id}")
     void delete (@AuthenticationPrincipal User user,

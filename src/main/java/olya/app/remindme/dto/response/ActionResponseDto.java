@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import olya.app.remindme.model.Action;
 import olya.app.remindme.model.Subject;
+import olya.app.remindme.model.TimeInterval;
 
 @Getter
 @Setter
@@ -15,10 +16,12 @@ public class ActionResponseDto {
     private String title;
     private boolean active;
     private LocalDate startDate;
-    private int repeatEveryNumOfDays;
+    private LocalDate lastExecutionDate;
+    private TimeInterval intervalBetweenEvents;
     private Integer numOfRepeats;
-    private int numOfDaysBeforeEventForAdvanceNotice;
-    private int numOfDaysBeforeEventForShortNotice;
+    private int repeatsCount;
+    private Integer numOfDaysBeforeEventForAdvanceNotice;
+    private Integer numOfDaysBeforeEventForShortNotice;
     private Action.NotificationMethod notificationMethod;
     private boolean requiresConfirmation;
 }

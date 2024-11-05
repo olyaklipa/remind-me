@@ -21,9 +21,12 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public boolean create(Event event) {
-        //to use by cron job
-        return false;
+    public Event create(Action action) {
+        Event event = new Event();
+        event.setAction(action);
+        event.setDate(LocalDate.now());
+        event.setStatus(Event.Status.NA);
+        return eventRepository.save(event);
     }
 
     @Override

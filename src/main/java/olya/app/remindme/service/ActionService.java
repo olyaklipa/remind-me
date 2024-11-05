@@ -10,8 +10,8 @@ public interface ActionService {
     Action create(Long userId, ActionRequestDto actionRequestDto);
     Action update(Long userId, Long id, ActionRequestDto actionRequestDto);
     void updateLastExecutionDate(Action action, LocalDate date);
-//    Action suspend(Long userId, Long id);
-//    Action reactivate(Long userId, Long id);
+    Action suspend(Long userId, Long id);
+    Action resume(Long userId, Long id, LocalDate newStartDate);
     void delete(Long userId, Long id);
     Action getById(Long userId, Long id);
     List<Action>getBySubject(Long userId, Long subjectId);

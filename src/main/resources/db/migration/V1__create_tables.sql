@@ -57,6 +57,19 @@ CREATE TABLE `subjects`
 
 
 -- ----------------------------
+-- Table structure for time_intervals
+-- ----------------------------
+DROP TABLE IF EXISTS `time_intervals`;
+CREATE TABLE `time_intervals`
+(
+    `id`            bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `time_unit`     varchar(25)    NOT NULL,
+    `quantity`      int    UNSIGNED NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+
+-- ----------------------------
 -- Table structure for actions
 -- ----------------------------
 DROP TABLE IF EXISTS `actions`;
@@ -68,7 +81,7 @@ CREATE TABLE `actions`
     `active`                                      bit                      DEFAULT 1,
     `start_date`                                  date            NOT NULL,
     `last_execution_date`                         date,
-    `repeat_every_num_of_days`                    int UNSIGNED    NOT NULL,
+    `time_interval_id`                            bigint UNSIGNED NOT NULL,
     `num_of_repeats`                              int UNSIGNED,
     `repeats_count`                               int UNSIGNED,
     `num_of_days_before_event_for_advance_notice` int UNSIGNED,
@@ -76,9 +89,9 @@ CREATE TABLE `actions`
     `notification_method`                         varchar(25)     NOT NULL,
     `requires_confirmation`                       bit             NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
-    CONSTRAINT `FK_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
+    CONSTRAINT `FK_subject_id` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT `FK_time_interval_id` FOREIGN KEY (`time_interval_id`) REFERENCES `time_intervals` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
-
 
 
 -- ----------------------------

@@ -11,6 +11,8 @@ import olya.app.remindme.repository.ActionRepository;
 import olya.app.remindme.repository.EventRepository;
 import olya.app.remindme.service.CommunicationService;
 import olya.app.remindme.service.EmailService;
+import olya.app.remindme.service.EventService;
+import olya.app.remindme.utils.DateCalculations;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.springframework.stereotype.Component;
@@ -22,7 +24,7 @@ public class ReminderJob implements Job {
     public static final String TEMPLATE = "reminderEmailTemplate.html";
     private final ActionRepository actionRepository;
     private final CommunicationService communicationService;
-    private final EventRepository eventRepository;
+    private final EventService eventService;
 
     @Override
     public void execute(JobExecutionContext context) {
@@ -30,12 +32,9 @@ public class ReminderJob implements Job {
         LocalDate today = LocalDate.now();
         List<Action> actions = actionRepository.findAllByActiveTrue();
         for (Action action : actions) {
-            LocalDate lastExecutionDate = (action.getLastExecutionDate() == null)
-                    ? action.getStartDate()
-                    : action.getLastExecutionDate();
-            LocalDate nextEventDate = lastExecutionDate.plusDays(action.getRepeatEveryNumOfDays());
+            LocalDate nextEventDate = DateCalculations.calculateNextExecutionDate(action);
             if (today.isEqual(nextEventDate)) {
-                createEvent(action);
+                eventService.create(action);
                 updateAction (action);
                 communicationService.sendData(action, today, TEMPLATE, "");
             }
@@ -43,20 +42,11 @@ public class ReminderJob implements Job {
         log.info("ReminderJob execution ended");
     }
 
-
-    private void createEvent(Action action) {
-        Event event = new Event();
-        event.setAction(action);
-        event.setDate(LocalDate.now());
-        event.setStatus(Event.Status.NA);
-        eventRepository.save(event);
-    }
-
     private void updateAction (Action action) {
         action.setLastExecutionDate(LocalDate.now());
         if (action.getNumOfRepeats() != null) {
             int updatedRepeatsCount = action.getRepeatsCount() + 1;
-            if (action.getNumOfRepeats() == updatedRepeatsCount && !action.isRequiresConfirmation()) {
+            if (action.getNumOfRepeats() == updatedRepeatsCount) {
                 action.setActive(false);
             }
             action.setRepeatsCount(updatedRepeatsCount);
