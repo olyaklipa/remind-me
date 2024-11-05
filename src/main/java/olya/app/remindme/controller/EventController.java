@@ -1,8 +1,11 @@
 package olya.app.remindme.controller;
 
+import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import olya.app.remindme.dto.request.ActionRequestDto;
 import olya.app.remindme.dto.response.ActionResponseDto;
 import olya.app.remindme.dto.response.EventResponseDto;
 import olya.app.remindme.model.Action;
@@ -13,10 +16,7 @@ import olya.app.remindme.service.EventService;
 import olya.app.remindme.service.mapper.ActionMapper;
 import olya.app.remindme.service.mapper.EventMapper;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,5 +35,13 @@ public class EventController {
     List<EventResponseDto> get (@AuthenticationPrincipal User user) {
         List<Event> events = eventService.getAll(user.getId());
         return events.stream().map(eventMapper::mapToDto).collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}/update")
+    EventResponseDto update (@PathVariable Long id,
+                             @RequestParam Event.Status status,
+                             @RequestParam boolean updateDate) {
+        Event event = eventService.update(id, status, updateDate);
+        return eventMapper.mapToDto(event);
     }
 }

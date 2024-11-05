@@ -10,6 +10,8 @@ public class PublicEndpointsConfig {
     private final List<String> publicEndpoints = List.of(
             "/api/auth/login",
             "/users/registration",
-            "/test"
+            "/test",
+            "/send-email",
+            "/events/{id}/status"
     );
 }
