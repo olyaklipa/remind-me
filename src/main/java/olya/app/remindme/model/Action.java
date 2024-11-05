@@ -1,14 +1,6 @@
 package olya.app.remindme.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.Data;
  /*
@@ -45,7 +37,9 @@ public class Action {
     private boolean active;
     private LocalDate startDate; //required
     private LocalDate lastExecutionDate; //initially null, set automatically by ReminderJob
-    private int repeatEveryNumOfDays; //required
+    @OneToOne
+    @JoinColumn(name = "time_interval_id")
+    private TimeInterval intervalBetweenEvents; //required
     private Integer numOfRepeats;
     private int repeatsCount; // initially 0, set automatically by ReminderJob
     private Integer numOfDaysBeforeEventForAdvanceNotice; //not required
