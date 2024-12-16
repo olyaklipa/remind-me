@@ -14,8 +14,10 @@ public class ActionMapper {
         actionResponseDto.setTitle(action.getTitle());
         actionResponseDto.setActive(action.isActive());
         actionResponseDto.setStartDate(action.getStartDate());
-        actionResponseDto.setRepeatEveryNumOfDays(action.getRepeatEveryNumOfDays());
+        actionResponseDto.setLastExecutionDate(action.getLastExecutionDate());
+        actionResponseDto.setIntervalBetweenEvents(action.getIntervalBetweenEvents());
         actionResponseDto.setNumOfRepeats(action.getNumOfRepeats());
+        actionResponseDto.setRepeatsCount(action.getRepeatsCount());
         actionResponseDto.setNumOfDaysBeforeEventForAdvanceNotice(action.getNumOfDaysBeforeEventForAdvanceNotice());
         actionResponseDto.setNumOfDaysBeforeEventForShortNotice(action.getNumOfDaysBeforeEventForShortNotice());
         actionResponseDto.setNotificationMethod(action.getNotificationMethod());
@@ -25,9 +27,7 @@ public class ActionMapper {
 
     public Action mapToEntity(Action action, ActionRequestDto actionRequestDto) {
         action.setTitle(actionRequestDto.getTitle());
-        action.setActive(actionRequestDto.isActive());
         action.setStartDate(actionRequestDto.getStartDate());
-        action.setRepeatEveryNumOfDays(actionRequestDto.getRepeatEveryNumOfDays());
         action.setNumOfRepeats(actionRequestDto.getNumOfRepeats());
         action.setNumOfDaysBeforeEventForAdvanceNotice(actionRequestDto.getNumOfDaysBeforeEventForAdvanceNotice());
         action.setNumOfDaysBeforeEventForShortNotice(actionRequestDto.getNumOfDaysBeforeEventForShortNotice());

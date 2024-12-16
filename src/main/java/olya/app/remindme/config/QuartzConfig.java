@@ -30,7 +30,7 @@ public class QuartzConfig {
                 .newTrigger()
                 .forJob(reminderJobDetail())
                 .withIdentity("reminderTrigger")
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(8, 00))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(23, 40))
                 .build();
     }
 
@@ -68,7 +68,7 @@ public class QuartzConfig {
                 .newTrigger()
                 .forJob(confirmationJobDetail())
                 .withIdentity("confirmationTrigger")
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(21, 00))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(23, 43))
                 .build();
     }
 
@@ -87,7 +87,7 @@ public class QuartzConfig {
                 .newTrigger()
                 .forJob(chasingConfirmationJobDetail())
                 .withIdentity("chasingConfirmationTrigger")
-                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(20, 00))
+                .withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(23, 50))
                 .build();
     }
 }
