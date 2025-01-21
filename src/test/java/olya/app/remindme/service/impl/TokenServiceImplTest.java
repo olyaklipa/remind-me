@@ -1,7 +1,10 @@
 package olya.app.remindme.service.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -15,8 +18,6 @@ import olya.app.remindme.model.Token;
 import olya.app.remindme.model.User;
 import olya.app.remindme.repository.TokenRepository;
 import olya.app.remindme.repository.UserRepository;
-import olya.app.remindme.service.TokenService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,10 +50,6 @@ class TokenServiceImplTest {
         mockUser.setActive(true);
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void testCreateTokenEntity_Success() {
         String tokenValue = "sample-token";
@@ -62,8 +59,8 @@ class TokenServiceImplTest {
         when(userRepository.findByEmailAndActiveTrue(email)).thenReturn(Optional.of(mockUser));
         tokenService.createTokenEntity(tokenValue, expiresAt, email);
         ArgumentCaptor<Token> tokenCaptor = ArgumentCaptor.forClass(Token.class);
-
         verify(tokenRepository).save(tokenCaptor.capture());
+
         Token capturedToken = tokenCaptor.getValue();
         assertEquals(tokenValue, capturedToken.getToken());
         assertFalse(capturedToken.isRevoked());
@@ -81,11 +78,11 @@ class TokenServiceImplTest {
         assertThrows(EntityNotFoundException.class, () ->
                 tokenService.createTokenEntity(tokenValue, expiresAt, email)
         );
-
         verify(tokenRepository, never()).save(any());
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void testRevokeUserTokens_TokensExist() {
         Token token1 = new Token();
         token1.setId(1L);
@@ -98,10 +95,12 @@ class TokenServiceImplTest {
         when(tokenRepository.findByUserIdAndRevokedFalse(mockUser.getId()))
                 .thenReturn(List.of(token1, token2));
         tokenService.revokeUserTokens(mockUser);
+        ArgumentCaptor<List<Token>> listCaptor = ArgumentCaptor.forClass(List.class);
+        verify(tokenRepository).saveAll(listCaptor.capture());
 
-        assertTrue(token1.isRevoked());
-        assertTrue(token2.isRevoked());
-        verify(tokenRepository).saveAll(List.of(token1, token2));
+        List<Token> capturedTokens = listCaptor.getValue();
+        assertEquals(2, capturedTokens.size());
+        assertTrue(capturedTokens.stream().allMatch(Token::isRevoked));
     }
 
     @Test
@@ -109,7 +108,6 @@ class TokenServiceImplTest {
         when(tokenRepository.findByUserIdAndRevokedFalse(mockUser.getId()))
                 .thenReturn(Collections.emptyList());
         tokenService.revokeUserTokens(mockUser);
-
         verify(tokenRepository, never()).saveAll(any());
     }
 
