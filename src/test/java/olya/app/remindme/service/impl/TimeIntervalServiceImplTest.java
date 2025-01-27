@@ -79,5 +79,4 @@ class TimeIntervalServiceImplTest {
         //step2: expected vs return value
         assertThat(result).usingRecursiveComparison().isEqualTo(mockTimeInterval);
     }
-
 }
