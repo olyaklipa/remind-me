@@ -1,10 +1,5 @@
 package olya.app.remindme.service.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import olya.app.remindme.dto.request.ActionRequestDto;
 import olya.app.remindme.model.TimeInterval;
 import olya.app.remindme.repository.TimeIntervalRepository;
@@ -16,6 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class TimeIntervalServiceImplTest {
     @Mock
@@ -23,6 +23,14 @@ class TimeIntervalServiceImplTest {
 
     @InjectMocks
     private TimeIntervalServiceImpl timeIntervalService;
+
+//    private TimeInterval buildTimeInterval(Long id, TimeInterval.TimeUnit timeUnit, int quantity) {
+//        return TimeInterval.builder()
+//                .id(1L)
+//                .timeUnit(TimeInterval.TimeUnit.DAYS)
+//                .quantity(7)
+//                .build();
+//    }
 
     private ActionRequestDto.TimeIntervalDto mockTimeIntervalDto;
     private TimeInterval mockTimeInterval;
@@ -33,10 +41,11 @@ class TimeIntervalServiceImplTest {
         mockTimeIntervalDto.setTimeUnit(TimeInterval.TimeUnit.DAYS);
         mockTimeIntervalDto.setQuantity(7);
 
-        mockTimeInterval = new TimeInterval();
-        mockTimeInterval.setId(1L);
-        mockTimeInterval.setTimeUnit(TimeInterval.TimeUnit.DAYS);
-        mockTimeInterval.setQuantity(7);
+        mockTimeInterval = TimeInterval.builder()
+                .id(1L)
+                .timeUnit(TimeInterval.TimeUnit.DAYS)
+                .quantity(7)
+                .build();
     }
 
     @Test

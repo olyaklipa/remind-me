@@ -25,7 +25,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class TokenServiceImplTest {
@@ -45,7 +44,7 @@ class TokenServiceImplTest {
     @BeforeEach
     void setUp() {
         mockUser = new User();
-        ReflectionTestUtils.setField(mockUser, "id", 1L);
+        mockUser.setId(1L);
         mockUser.setEmail("test@example.com");
         mockUser.setActive(true);
     }
