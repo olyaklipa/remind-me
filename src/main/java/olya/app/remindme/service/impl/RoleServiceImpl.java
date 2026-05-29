@@ -1,5 +1,6 @@
 package olya.app.remindme.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +27,13 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(readOnly = true)
     public Role getByName(String name) {
+        if (!isValidRoleName(name)) {
+            throw new EntityNotFoundException("Role " + name + " not found");
+        }
         Role.RoleName roleName = Role.RoleName.valueOf(name);
-        return roleRepository.findByRoleName(roleName)
-                .orElseThrow(() -> new EntityNotFoundException("Role " + name + " not found"));
+            return roleRepository.findByRoleName(roleName)
+                    .orElseThrow(() -> new EntityNotFoundException("Role " + name + " not found"));
+
     }
 
     @Override
@@ -36,4 +41,10 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> getAll() {
         return roleRepository.findAll();
     }
+
+    private boolean isValidRoleName(String name) {
+        return Arrays.stream(Role.RoleName.values())
+                .anyMatch(roleName -> roleName.name().equals(name));
+    }
+
 }

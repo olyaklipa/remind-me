@@ -4,13 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Collection;
 import java.util.Set;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor  // Required for Hibernate
+@AllArgsConstructor // Required for @Builder
 @Table(name = "users")
 public class User implements UserDetails {
     @Id

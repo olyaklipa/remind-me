@@ -1,10 +1,16 @@
 package olya.app.remindme.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor  // Required for Hibernate
+@AllArgsConstructor // Required for @Builder
 @Table(name = "time_intervals")
 public class TimeInterval {
     @Id
