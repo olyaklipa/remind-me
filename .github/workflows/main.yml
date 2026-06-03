@@ -58,5 +58,6 @@
             key: ${{ secrets.EC2_SSH_KEY }}
             script: |
               cd /home/ubuntu/remind-me
+              docker-compose down --remove-orphans
               docker-compose pull
-              docker-compose up -d
+              docker-compose up -d --force-recreate --remove-orphans
