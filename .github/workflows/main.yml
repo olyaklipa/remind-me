@@ -3,7 +3,7 @@
   on:
     push:
       branches:
-        - ci_cd
+        - ci-cd
 
   jobs:
     build:
@@ -49,3 +49,14 @@
 
         - name: Push to Docker Hub
           run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/remind-me:latest
+
+        - name: Deploy to EC2
+          uses: appleboy/ssh-action@v1.0.3
+          with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USER }}
+            key: ${{ secrets.EC2_SSH_KEY }}
+            script: |
+              cd /home/ubuntu/remind-me
+              docker-compose pull
+              docker-compose up -d
